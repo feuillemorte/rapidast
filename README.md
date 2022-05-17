@@ -1,3 +1,6 @@
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/feuillemorte/rapidast/master.svg)](https://results.pre-commit.ci/latest/github/feuillemorte/rapidast/master)
+
+
 # RapiDAST
 
 RapiDAST provides a framework for continuous, proactive and fully automated dynamic scanning against web apps/API.
