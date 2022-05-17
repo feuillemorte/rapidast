@@ -4,9 +4,7 @@ import uuid
 from dataclasses import dataclass
 from pathlib import Path
 
-import jinja2
 import jinja2.sandbox
-
 from zapv2 import ZAPv2
 
 
@@ -115,11 +113,7 @@ def add_and_load_script(script: Script, **kwargs):
 
 def delete_all_loaded_scripts(**kwargs):
     zap = ZAPv2(**kwargs)
-    for name in [
-        s["name"]
-        for s in zap.script.list_scripts
-        if s.get("name", "").startswith(Script.name_prefix)
-    ]:
+    for name in [s["name"] for s in zap.script.list_scripts if s.get("name", "").startswith(Script.name_prefix)]:
         logger.info(f"Removing script {name}")
         zap.script.remove(name, apikey=kwargs["apikey"])
 

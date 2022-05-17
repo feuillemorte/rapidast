@@ -1,16 +1,15 @@
-import yaml
 import os
+
+import yaml
 
 with open("./config/config.yaml", "r") as stream:
     try:
         config = yaml.safe_load(stream)
     except yaml.YAMLError as exc:
-        raise RuntimeError(
-            "Something went wrong parsing the config.yaml file: " + str(exc)
-        )
+        raise RuntimeError("Something went wrong parsing the config.yaml file: " + str(exc))
 
 serviceName = config["general"]["serviceName"]
-apiKey = os.getenv('API_KEY')
+apiKey = os.getenv("API_KEY")
 appDir = config["general"]["appDir"]
 localProxy = config["general"]["localProxy"]
 sessionName = config["general"]["sessionName"]
@@ -66,8 +65,7 @@ if authMethod == "scriptBasedAuthentication":
     authTokenEndpoint = config["scan"]["scriptAuth"]["authTokenEndpoint"]
     authClientID = config["scan"]["scriptAuth"]["authClientID"]
     authParams = (
-        "scriptName=" + authScriptName + "&"
-        "token_endpoint=" + authTokenEndpoint + "&client_id=" + authClientID
+        "scriptName=" + authScriptName + "&" "token_endpoint=" + authTokenEndpoint + "&client_id=" + authClientID
     )
 
     authCreateUser = config["scan"]["scriptAuth"]["authCreateUser"]
@@ -80,6 +78,4 @@ if authMethod == "scriptBasedAuthentication":
     HttpSenderScriptName = config["scan"]["scriptAuth"]["HttpSenderScriptName"]
     HttpSenderScriptEngine = config["scan"]["scriptAuth"]["HttpSenderScriptEngine"]
     HttpSenderScriptFilePath = config["scan"]["scriptAuth"]["HttpSenderScriptFilePath"]
-    HttpSenderScriptDescription = config["scan"]["scriptAuth"][
-        "HttpSenderScriptDescription"
-    ]
+    HttpSenderScriptDescription = config["scan"]["scriptAuth"]["HttpSenderScriptDescription"]

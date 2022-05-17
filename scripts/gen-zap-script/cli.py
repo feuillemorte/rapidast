@@ -18,9 +18,7 @@ logger.addHandler(logging.StreamHandler())
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Generate active and passive ZAP scripts"
-    )
+    parser = argparse.ArgumentParser(description="Generate active and passive ZAP scripts")
     parser.add_argument(
         "--rapidast-config",
         type=argparse.FileType("r"),
@@ -61,29 +59,21 @@ if __name__ == "__main__":
         finding_group = parser.add_argument_group(title="Finding definition")
         finding_group.add_argument("--finding-title", type=str, required=True)
         finding_group.add_argument("--finding-description", type=str, default="")
-        finding_group.add_argument(
-            "--finding-confidence", type=int, choices=list(range(1, 4)), default=1
-        )
-        finding_group.add_argument(
-            "--finding-risk", type=int, choices=list(range(0, 4)), default=1
-        )
+        finding_group.add_argument("--finding-confidence", type=int, choices=list(range(1, 4)), default=1)
+        finding_group.add_argument("--finding-risk", type=int, choices=list(range(0, 4)), default=1)
 
     # Active or Passive
     script_type = parser.add_subparsers(title="Script type", dest="script_type")
 
     # Active
-    script_type_active = script_type.add_parser(
-        "active", help="Script for ZAP active scanner"
-    )
+    script_type_active = script_type.add_parser("active", help="Script for ZAP active scanner")
     add_finding_group(script_type_active)
     # Payloads
     payloads_group = script_type_active.add_argument_group(
         title="Payloads definition",
         description="Payloads are literals inserted or appended to URL/body parameters scanned by ZAP.",
     )
-    payload_definition_group = payloads_group.add_mutually_exclusive_group(
-        required=True
-    )
+    payload_definition_group = payloads_group.add_mutually_exclusive_group(required=True)
     payload_definition_group.add_argument(
         "--payload",
         type=str,
@@ -115,9 +105,7 @@ if __name__ == "__main__":
             if x < 0:
                 raise ValueError()
         except ValueError:
-            raise argparse.ArgumentTypeError(
-                "Positive integer expected for milliseconds count"
-            )
+            raise argparse.ArgumentTypeError("Positive integer expected for milliseconds count")
         return x
 
     payloads_group.add_argument(
@@ -140,12 +128,8 @@ if __name__ == "__main__":
         help="Where should the regexp be matched",
     )
     regexp_group = response_processing_group.add_mutually_exclusive_group(required=True)
-    regexp_group.add_argument(
-        "--regex", type=str, nargs="+", help="Regular Expression to evaluate"
-    )
-    regexp_group.add_argument(
-        "--regex-file", type=str, help="Regular Expressions to evaluate, one per line"
-    )
+    regexp_group.add_argument("--regex", type=str, nargs="+", help="Regular Expression to evaluate")
+    regexp_group.add_argument("--regex-file", type=str, help="Regular Expressions to evaluate, one per line")
 
     # Passive
     script_type_passive = script_type.add_parser(
@@ -155,8 +139,7 @@ if __name__ == "__main__":
     # Request/Response search definition
     search_group = script_type_passive.add_argument_group(title="Search definition")
     search_in_choices = ["request.method", "request.url"] + [
-        ".".join(a)
-        for a in itertools.product(*[["request", "response"], ["header", "body"]])
+        ".".join(a) for a in itertools.product(*[["request", "response"], ["header", "body"]])
     ]
     search_group.add_argument(
         "--search-in",
@@ -166,12 +149,8 @@ if __name__ == "__main__":
         help="Where should the regexp be matched",
     )
     regexp_group = search_group.add_mutually_exclusive_group(required=True)
-    regexp_group.add_argument(
-        "--regex", type=str, nargs="+", help="Regular Expression to evaluate"
-    )
-    regexp_group.add_argument(
-        "--regex-file", type=str, help="Regular Expressions to evaluate, one per line"
-    )
+    regexp_group.add_argument("--regex", type=str, nargs="+", help="Regular Expression to evaluate")
+    regexp_group.add_argument("--regex-file", type=str, help="Regular Expressions to evaluate, one per line")
 
     if len(sys.argv) == 1:
         parser.print_help()
@@ -243,11 +222,7 @@ if __name__ == "__main__":
         try:
             rapidast_config = yaml.safe_load(args.rapidast_config)
         except yaml.YAMLError as e:
-            raise RuntimeError(
-                "Something went wrong parsing the {} file: {}".format(
-                    args.rapidast_config.name, str(e)
-                )
-            )
+            raise RuntimeError("Something went wrong parsing the {} file: {}".format(args.rapidast_config.name, str(e)))
         zap_options["proxies"] = rapidast_config["general"]["localProxy"]
         zap_options["apikey"] = rapidast_config["general"]["apiKey"]
 

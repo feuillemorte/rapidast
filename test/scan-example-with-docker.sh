@@ -1,12 +1,12 @@
-#### 
+####
 # This script is to test a scan using docker-compose
 #
 # 1. Get a URL for the OAS3 definition file
 # 2. Get a URL for the target API
 # 3. Create config.yaml with the URLs and place it in config/
-# 4. zaproxy container must be running 
+# 4. zaproxy container must be running
 # $ docker-compose up zaproxy
-# 
+#
 # Run in the project root directory,
 # $ test/scan-example-with-docker.sh <dir_to_store_results>
 #

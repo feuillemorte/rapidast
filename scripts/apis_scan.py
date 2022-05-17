@@ -1,14 +1,17 @@
 #!/usr/bin/env python3
+import logging
 import os
 import sys
 import time
-import logging
 from datetime import datetime
+
 from zapv2 import ZAPv2
 
 from config import *
 
 context_id = ""
+
+TEST_CONSTANT = {"key": "long-value-long-value-long-value-long-value-long-value-long-value-long-value-long-value"}
 
 
 def create_session(session_name):
@@ -47,10 +50,7 @@ def enable_httpsender_script():
         )
     )
     logging.info(
-        "Enable httpsender script: "
-        + HttpSenderScriptName
-        + " -> "
-        + script.enable(scriptname=HttpSenderScriptName)
+        "Enable httpsender script: " + HttpSenderScriptName + " -> " + script.enable(scriptname=HttpSenderScriptName)
     )
 
 
@@ -106,18 +106,14 @@ def create_context():
                 "Define Loggedin indicator: "
                 + authIndicatorRegex
                 + " -> "
-                + auth.set_logged_in_indicator(
-                    contextid=context_id, loggedinindicatorregex=authIndicatorRegex
-                )
+                + auth.set_logged_in_indicator(contextid=context_id, loggedinindicatorregex=authIndicatorRegex)
             )
         else:
             logging.info(
                 "Define Loggedout indicator: "
                 + authIndicatorRegex
                 + " -> "
-                + auth.set_logged_out_indicator(
-                    contextid=context_id, loggedoutindicatorregex=authIndicatorRegex
-                )
+                + auth.set_logged_out_indicator(contextid=context_id, loggedoutindicatorregex=authIndicatorRegex)
             )
 
         # Create a testuser for script authentication.
@@ -137,9 +133,7 @@ def create_context():
                     "User ID: "
                     + user_id
                     + "; username -> "
-                    + users.set_user_name(
-                        contextid=context_id, userid=user_id, name=user_name
-                    )
+                    + users.set_user_name(contextid=context_id, userid=user_id, name=user_name)
                     + "; credentials -> "
                     + users.set_authentication_credentials(
                         contextid=context_id,
@@ -147,9 +141,7 @@ def create_context():
                         authcredentialsconfigparams=user.get("credentials"),
                     )
                     + "; enabled -> "
-                    + users.set_user_enabled(
-                        contextid=context_id, userid=user_id, enabled=True
-                    )
+                    + users.set_user_enabled(contextid=context_id, userid=user_id, enabled=True)
                 )
 
                 zap.forcedUser.set_forced_user(context_id, user_id)
@@ -169,9 +161,7 @@ def get_APIs():
         try:
             zap.openapi.import_url(oasUrl, target)
         except Exception as e:
-            raise RuntimeError(
-                "Something went wrong while importing OpenAPI: " + str(e)
-            )
+            raise RuntimeError("Something went wrong while importing OpenAPI: " + str(e))
 
         # for easier debugging
         time.sleep(1)
@@ -185,10 +175,7 @@ def get_APIs():
             for api in apis:
 
                 if not api.lower().endswith(oas_file_suffixes):
-                    logging.warning(
-                        "unsupported file is in the OpenAPI definition directory: "
-                        + api
-                    )
+                    logging.warning("unsupported file is in the OpenAPI definition directory: " + api)
                     continue
 
                 found_oas_file = True
@@ -212,9 +199,10 @@ def start_active_scanner():
     if len(policies) > 0:
         # add policies
         for policy in policies:
-            if ( zap.ascan.import_scan_policy(path=appDir + "/policies/" + policy) == 'already_exists' ):
-                logging.warning(f"The policy {policy} was already in ZAP. No modification were applied to the existing policy")
-
+            if zap.ascan.import_scan_policy(path=appDir + "/policies/" + policy) == "already_exists":
+                logging.warning(
+                    f"The policy {policy} was already in ZAP. No modification were applied to the existing policy"
+                )
 
         # remove other policies
         for existing_policy in zap.ascan.scan_policy_names:
@@ -242,11 +230,7 @@ def start_active_scanner():
     try:
         int(scan_id)
     except ValueError:
-        raise RuntimeError(
-            "Could not create scan for target {}, ZAP returned: {}".format(
-                target, scan_id
-            )
-        )
+        raise RuntimeError("Could not create scan for target {}, ZAP returned: {}".format(target, scan_id))
 
     logging.info("Start Active scan. Scan ID equals " + scan_id)
     logging.info("Scan Policies: " + str(zap.ascan.scan_policy_names))
@@ -303,14 +287,10 @@ if __name__ == "__main__":
     try:
         zap = ZAPv2(proxies=localProxy, apikey=apiKey)
     except Exception:
-        raise RuntimeError(
-            "Can't connect to ZAP. Is it running and proxying on localhost:8090?"
-        )
+        raise RuntimeError("Can't connect to ZAP. Is it running and proxying on localhost:8090?")
 
     scan_time_str = datetime.now().strftime("%Y%m%d-%H%M%S")
-    session_fullpath_name = (
-        appDir + workDir + "sessions/" + scan_time_str + "/" + sessionName
-    )
+    session_fullpath_name = appDir + workDir + "sessions/" + scan_time_str + "/" + sessionName
 
     create_session(session_fullpath_name)
 
