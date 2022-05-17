@@ -10,6 +10,8 @@ from config import *
 
 context_id = ""
 
+TEST_CONSTANT = {"key": "long-value-long-value-long-value-long-value-long-value-long-value-long-value-long-value"}
+
 
 def create_session(session_name):
     # Start the ZAP session
